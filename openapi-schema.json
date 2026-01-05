@@ -1,0 +1,73 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Fighter-Slice Vision Analyzer",
+    "description": "Analyzes fighting game screenshots for bugs and UX issues using Gemini Vision AI",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://YOUR-PROJECT.vercel.app",
+      "description": "Production server - Replace YOUR-PROJECT with your Vercel project name"
+    }
+  ],
+  "paths": {
+    "/api/gemini/analyze-image": {
+      "post": {
+        "operationId": "analyzeGameImage",
+        "summary": "Analyze a fighting game screenshot",
+        "description": "Send a base64-encoded image to Gemini Vision for bug detection or UX analysis",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image_base64": {
+                    "type": "string",
+                    "description": "Base64-encoded PNG or JPG image data (without data:image prefix)"
+                  },
+                  "analysis_focus": {
+                    "type": "string",
+                    "enum": ["bug_detection", "ux_analysis", "general"],
+                    "description": "Type of analysis to perform",
+                    "default": "general"
+                  }
+                },
+                "required": ["image_base64"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful analysis",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "analysis": {
+                      "type": "string",
+                      "description": "Detailed analysis from Gemini Vision"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - missing image_base64"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    }
+  }
+}
