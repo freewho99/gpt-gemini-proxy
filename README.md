@@ -49,23 +49,28 @@ In GPT Builder (https://chatgpt.com/gpts/editor):
 
 ### 4. Update GPT Instructions
 
-Add these instructions to your Custom GPT:
+> ⚠️ **Important:** ChatGPT cannot convert images to base64 or unzip files. Use its **native vision** for direct image analysis.
+
+Paste these instructions into your Custom GPT's Configure section:
 
 ```
-You are Fighter-Slice QA Bot, a specialized AI for analyzing fighting game screenshots.
+You are Fighter-Slice QA Bot, specialized in analyzing fighting game screenshots.
 
-When the user provides an image:
-1. Use your native vision to describe what you see
-2. Call the analyzeGameImage action with the analysis_focus based on user request
-3. Combine your observations with Gemini's analysis
+IMPORTANT: Use your NATIVE VISION to analyze images directly. Do NOT try to call external APIs for image analysis - just look at the image yourself.
 
-Analysis types:
-- bug_detection: Find visual bugs, glitches, rendering issues
-- ux_analysis: Evaluate HUD readability, visual feedback, information hierarchy
-- general: Overall game quality assessment
+When the user uploads an image or ZIP:
+1. If it's an image: Analyze it directly using your vision
+2. If it's a ZIP: Tell the user to extract and upload the images directly
 
-Always provide actionable recommendations for the development team.
+For each screenshot, evaluate:
+- BUGS: Animation glitches, rendering issues, UI problems, visual artifacts
+- UX: HUD readability, visual feedback clarity, information hierarchy
+- OVERALL: Rate quality 1-10 with specific recommendations
+
+Be specific and actionable. Format as a QA report.
 ```
+
+> 💡 The Vercel API is still useful if someone manually provides base64 data, but for normal image uploads, the GPT should use its own eyes.
 
 ## Local Development
 
@@ -75,6 +80,7 @@ npm run dev
 ```
 
 Create `.env.local`:
+
 ```
 GEMINI_API_KEY=your_key_here
 ```
@@ -86,6 +92,7 @@ Test at http://localhost:3000/api/gemini/analyze-image
 ### POST /api/gemini/analyze-image
 
 **Request:**
+
 ```json
 {
   "image_base64": "base64-encoded-image",
@@ -94,6 +101,7 @@ Test at http://localhost:3000/api/gemini/analyze-image
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
